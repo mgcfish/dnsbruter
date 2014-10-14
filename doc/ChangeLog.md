@@ -1,7 +1,7 @@
 ## Version 0.3
 
 * Bruteforcing can now be stopped with ctrl-c
-* Reduced networkoverload
+* Reduced networktraffic in order to prevent total breakdown ;)
 * Small fixes
 
 ## Version 0.2
