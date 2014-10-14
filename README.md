@@ -15,11 +15,15 @@ Preferably, you can download dnsbruter by cloning the [Git](https://github.com/w
 
 DNSBruter works with [Python](http://www.python.org/download/) version **2.6.x** and **2.7.x** on Debian/Ubuntu, RedHat and Windows platforms.
 
+On every platform you need "dnspython" in order to make dns querys:
+
+* [dnspython](http://www.dnspython.org/)
+
 On Windows you might need to install following package:
 
 * [Colorama](https://pypi.python.org/pypi/colorama)
 
-On Redhat you can install all needed packages with easy_install:
+On Redhat you can install additional packages with easy_install:
 
 	easy_install argparse
 	easy_install colorama
