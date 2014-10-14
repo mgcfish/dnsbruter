@@ -1,7 +1,13 @@
+## Version 0.3
+
+* Bruteforcing can now be stopped with ctrl-c
+* Reduced networkoverload
+* Small fixes
+
 ## Version 0.2
 
-* using sockets to make requests
-* using libraries
+* Using sockets to make requests
+* Using libraries
 
 ## Version 0.1
 
