@@ -60,6 +60,6 @@ Links
 ----
 
 * Download: [.tar.gz](https://github.com/whoot/dnsbruter/tarball/master) or [.zip](https://github.com/whoot/dnsbruter/archive/master)
-* Changelog: [Here](https://github.com/whoot/dnsbruter/blob/master/doc/CHANGELOG.md)
+* Changelog: [Here](https://github.com/whoot/dnsbruter/blob/master/doc/ChangeLog.md)
 * TODO: [Here](https://github.com/whoot/dnsbruter/blob/master/doc/TODO.md)
 * Issue tracker: https://github.com/whoot/dnsbruter/issues
