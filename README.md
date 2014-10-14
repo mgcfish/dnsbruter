@@ -2,6 +2,12 @@ DNSBruter
 =========
 
 DNSBruter is an open source multi-threaded penetration testing tool that automates the process of detecting all subdomains of a domain.<br>
+
+DNSBruter tries to perform a ZoneTransfer of the domain nameservers.<br>
+If the ZoneTransfer is not successful, DNSBruter will load the subdomain wordlist and bruteforce the subdomains.<br>
+
+Wildcard domains can be bruteforced, too!
+
 It is based on the [dnsbruter](https://github.com/marpie/dnsbruter) of [Markus Pieton](https://github.com/marpie).
 
 Installation
