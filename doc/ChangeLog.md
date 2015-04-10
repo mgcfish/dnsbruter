@@ -1,3 +1,10 @@
+## Version 0.4
+
+* Using Python 3.x now!
+* Using classes and objects
+* Better threading (fixed local network DOS when cheking a lot of subdomains)
+* Clearer output
+
 ## Version 0.3
 
 * Bruteforcing can now be stopped with ctrl-c

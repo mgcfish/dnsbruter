@@ -19,33 +19,26 @@
 # If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)
 #-------------------------------------------------------------------------------
 
+import re
+import time
+import hashlib
 from colorama import Fore
 from lib.request import Request
-from lib.thread_pool import ThreadPool
 
-class Bruteforcer:
+class Wildcard:
 	"""
-		This class will initiate the subdomain bruteforcing
+		This class checks if the domain is a wildcard domain.
 	"""
 	def __init__(self):
-		pass
+		print('\n[*] Starting wildcard detection:')
 
-	def run(self, domain, wordlist):
-		thread_pool = ThreadPool()
-		domain_name = domain.get_name()
-		is_wildcard = domain.get_is_wildcard()
+	def test(self, domain):
 		request = Request()
-		results = []
-		print('\n[*] Starting subdomain bruteforcing:')
-		if not (is_wildcard):
-			for subdomain in wordlist:
-				thread_pool.add_job((request.head_request, (subdomain, domain_name)))
-			thread_pool.start(100)
-
+		domain_name = domain.get_name()
+		randomSubdomain = hashlib.sha224(str(time.time()).encode('utf-8')).hexdigest()[:12]
+		response = request.get_request(randomSubdomain + '.' + domain_name)
+		if response:
+			domain.set_is_wildcard(response[1])
+			print(Fore.RED + ' | ' + domain_name + ' is a wildcard domain' + Fore.RESET)
 		else:
-			for subdomain in wordlist:
-				thread_pool.add_job((request.get_request, (subdomain + '.' + domain_name)))
-			thread_pool.start(100, is_wildcard)
-
-		for subdomain in thread_pool.get_result():
-			print(Fore.GREEN + ' |  ' + str(subdomain[1][0]) + Fore.RESET)
+			print(Fore.GREEN + ' | ' + domain_name + ' is no wildcard domain' + Fore.RESET)

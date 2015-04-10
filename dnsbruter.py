@@ -1,86 +1,110 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+#-------------------------------------------------------------------------------
+# DNS Bruter - Automatic Subdomain Bruteforcer
+# Copyright (c) 2015 Jan Rude
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)
+#-------------------------------------------------------------------------------
 
-############ Version information ##############
-__version__ = "0.3"
-__program__ = "DNSBruter v" + __version__
-__description__ = 'DNS Subdomain Bruteforcer'
-__author__ = "it.sec (JaRu)"
-__licence__ = "BSD Licence"
-__status__ = "Development"
-###############################################
+__version__ = "0.4"
+__program__ = "DNS Bruter"
+__description__ = 'Automatic Subdomain Bruteforcer'
+__author__ = "https://github.com/whoot"
 
-import time
-import socket
+import sys
+import os.path
 import datetime
 import argparse
-import warnings
-from colorama import init, Fore, Style
-warnings.filterwarnings(action="ignore", message=".*was already imported", category=UserWarning)
-warnings.filterwarnings(action="ignore", category=DeprecationWarning)
-from lib import settings
-from lib import loadWordlist
-from lib import zonetransfer
-from lib import wildcard
-from lib import bruteforcer
+from colorama import Fore, init, deinit, Style
+from lib.domain import Domain
+from lib.request import Request
+from lib.zonetransfer import Zonetransfer
+from lib.wildcard_test import Wildcard
+from lib.bruteforcer import Bruteforcer
 init()
 
-# Main
-def main(argv):
-	parser = argparse.ArgumentParser()
-	parser.add_argument('-d', '--domain', dest='domain', type=str, nargs='+', help='Target domains to test.')
-	parser.add_argument('-w', '--wordlist', dest='wordlist', default="wordlist_axfr_alexa_top_1mil_2014-02.txt", help='Subdomain wordlist (default: subdomains_big.txt)')
-	parser.add_argument('-t', '--threads', dest='threads', default=settings.THREADS, type=int, help='Threads for socket connections (default: 7)')
-	parser.add_argument('-to', '--timeout', dest='timeout', default=settings.TIMEOUT, type=int, help='Timeout for socket connections (default: 10)')
-	parser.add_argument('--user_agent', dest='user_agent', metavar='USER-AGENT (default: Mozilla/5.0)')
-	args = parser.parse_args()
+class DNSBruter:
+	def __init__(self):
+		self.__domain_list = []
+		self.__wordlist = []
 
-	try:
-		if args.threads > settings.MAX_NUMBER_OF_THREADS:
-			print Fore.RED + "Warning! Threads are set to", args.threads,"(max value is 10)\nThis can cause connection issues and/or DoS\nAborting...." + Fore.RESET
-			sys.exit(-2)
+	def run(self):
+		parser = argparse.ArgumentParser(usage='dnsbruter.py [options]', add_help=False)
+		group = parser.add_mutually_exclusive_group()
+		#anonGroup = parser.add_mutually_exclusive_group()
+		group.add_argument('-f', '--file', dest='file')
+		group.add_argument('-d', '--domain', dest='domain', type=str, nargs='+')
+		parser.add_argument( "-w", "--wordlist", required=True)
+		#anonGroup.add_argument('--tor', help='using only TOR for connections', action='store_true')
+		#anonGroup.add_argument('--privoxy', help='using only Privoxy for connections', action='store_true')
+		#anonGroup.add_argument('--tp', help='using TOR and Privoxy for connections', action='store_true')
+		parser.add_argument( "-h", "--help", action="help")
+		args = parser.parse_args()
 
-		settings.THREADS = args.threads
+		try:
+			if args.domain:
+				for dom in args.domain:
+					self.__domain_list.append(Domain(dom))
+			elif args.file:
+				if not os.path.isfile(args.file):
+					print(Fore.RED + "\n[x] File not found: " + args.file + "\n |  Aborting..." + Fore.RESET)
+					sys.exit(-2)
+				else:
+					with open(args.file, 'r') as f:
+						for line in f:
+							self.__domain_list.append(Domain(line.strip('\n')))
 
-		socket.setdefaulttimeout(args.timeout)
+			for domain in self.__domain_list:
+				print('\n\n' + Fore.CYAN + Style.BRIGHT + '[ Checking ' + domain.get_name() + ' ]' + '\n' + "-"* 73  + Fore.RESET + Style.RESET_ALL)
+				zonetransfer = Zonetransfer()
+				zonetransfer.run(domain)
+				if not domain.get_zonetransfer():
+					wildcard = Wildcard()
+					wildcard.test(domain)
 
-		if args.wordlist:
-			settings.WORDLIST = args.wordlist
+				if not self.__wordlist:
+					with open(args.wordlist, 'r') as wordlist:
+						for line in wordlist:
+							self.__wordlist.append(line.strip('\n'))
+				
+				bruteforcer = Bruteforcer()
+				bruteforcer.run(domain, self.__wordlist)
 
-		if args.user_agent:
-			settings.user_agent.update({'User-Agent':args.user_agent})
 
-		for domain in args.domain:
-			settings.WILDCARD_IP = ""
-			settings.DOMAIN = domain
-			do_zonetrans = zonetransfer.try_zonetransfer()
-			if do_zonetrans == False:
-				is_wildcard = wildcard.check_domain()
-				if is_wildcard == True:
-					wildcard.get_defaultResponse()
-				bruteforcer.init_search()
+		except KeyboardInterrupt:
+			print("\nReceived keyboard interrupt.\nQuitting...")
+			exit(-1)
+		finally:
+			deinit()
+			now = datetime.datetime.now()
+			print('\n\n' + __program__ + ' finished at ' + now.strftime("%Y-%m-%d %H:%M:%S") + '\n')	
 
-	except KeyboardInterrupt:
-		print Fore.RED + "\nReceived keyboard interrupt.\nQuitting..." + Fore.RESET
-		exit(1)
-	except Exception, e:
-		import traceback
-		print ('generic exception: ', traceback.format_exc())
-
-	finally:
-		print '\n'
-		now = datetime.datetime.now()
-		print __program__ + ' finished at ' + now.strftime("%Y-%m-%d %H:%M:%S") + '\n'
-		Style.RESET_ALL
-		return True
 
 if __name__ == "__main__":
-	import sys
-	print(Style.BRIGHT + '\n' + 50*'*')
-	print('\t' + __program__ )
-	print('\t' + __description__)
-	print('\t' + '(c)2014 by ' + __author__)
-	print('\t' + 'Status:\t' + __status__)
-	print('\t' + 'For legal purposes only!')
-	print(50*'*')
-	sys.exit( not main( sys.argv ) )
+	print('\n' + 73*'=' + Style.BRIGHT)
+	print(Fore.BLUE + ' ______  __   _ _______'.center(73))
+	print('|     \ | \  | |______'.center(73))
+	print('|_____/ |  \_| ______|'.center(73))
+	print('						 '.center(73))
+	print('______   ______ _     _ _______ _______  ______'.center(73))
+	print('|_____] |_____/ |     |    |    |______ |_____/'.center(73))
+	print('|_____] |    \_ |_____|    |    |______ |    \_'.center(73))
+	print(Fore.RESET + Style.RESET_ALL)
+	print(__description__.center(73))
+	print(('Version ' + __version__).center(73))
+	print((__author__).center(73))
+	print(73*'=')
+	main = DNSBruter()
+	main.run()

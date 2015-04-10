@@ -1,61 +1,74 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#-------------------------------------------------------------------------------
+# DNS Bruter - Automatic Subdomain Bruteforcer
+# Copyright (c) 2015 Jan Rude
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with this program.
+# If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)
+#-------------------------------------------------------------------------------
 
-"""
-Copyright (c) 2014 Jan Rude
-"""
-
-import time
-from Queue import Queue
-from os.path import isfile
-from threading import Thread, Lock
+import re
+import dns.name
 from colorama import Fore
-from lib import settings
-import dns.resolver
-import dns.zone
+from lib.request import Request
 
-# This method lists the name servers for a domain and tries to perform a zone transfer
-# If the zone transfer is successful, all subdomains get listed
-# If a spf record is found, it will be shown
-def try_zonetransfer():
-	print('\n[+] DNS name server for "' + settings.DOMAIN + '" are:')
-	nameserver = dns.resolver.query(settings.DOMAIN, 'NS')
-	for ns in nameserver:
-		print str(ns)
-	
-	# Check if SPF record exists
-	print('\n[*] Trying zone transfer for each nameserver...')
-	try:
-		spf_query = dns.resolver.query(settings.DOMAIN, 'TXT')
-		print(Fore.GREEN + '[+] SPF Record found!' + Fore.RESET)
-		for rdata in spf_query:
-			print ('Entry:SPFRecord;' + str(rdata))
-	except:
-		print (Fore.RED + '[x] No SPF Record found' + Fore.RESET)
-	
-	#try zone transfer
-	for ns in nameserver:
-		try:
-			zone = dns.zone.from_xfr(dns.query.xfr(str(ns), settings.DOMAIN, lifetime = 3.0))
-			time.sleep(1.3)
-			print(Fore.GREEN + '[+] Success!' + Fore.RESET)
-			names = zone.nodes.keys()
-			for name in names:
-				node_text = zone.nodes[name].to_text(name)
+class Zonetransfer:
+	"""
+		This class will try a zone-transfer for a domain.
+		If it is successful, subdomain bruteforcing will not be needed,
+		because every subdomain will be known.
+	"""
+	def __init__(self):
+		pass
+
+	def run(self, domain):
+		domain_name = domain.get_name()
+		request = Request()
+		nameserver = request.request_nameserver(domain_name)
+		print('[+] DNS name server are:')
+		for ns in nameserver:
+			domain.set_nameserver(ns)
+			print (' | ', str(ns))
+
+		request = Request()
+		print('\n[*] Trying zone transfer for each nameserver:')
+		spf_record = request.check_SPFRecord(domain.get_nameserver())
+		if spf_record:
+			print(Fore.GREEN + ' |  SPF Record: ' + Fore.RESET)
+			for data in transfer:
+				print(' | ' + data)
+
+		nodes = request.try_zonetransfer(domain.get_nameserver(), domain_name)
+		if not nodes:
+			print(Fore.RED + ' |  Transfer failed')
+			print(' |  Probably blocked from ' + domain_name + Fore.RESET)
+		else:
+			domain.set_zonetransfer()
+			for n in nodes.keys():
+				node_text = nodes[n].to_text(n)
 				#check IN A
 				checkInAOutput = checkInA(node_text)
 				if checkInAOutput is not None:
-					print ('Entry:' + str(name) + '.' + settings.DOMAIN + ';' + checkInAOutput)
+					print((Fore.GREEN + ' |  ' + str(n) + '.' + domain_name ).ljust(40) + ' -- ' + checkInAOutput + Fore.RESET)
 				else:
 				#check IN CNAME
-					checkInCNAMEOutput = checkInCNAME(node_text, zone.nodes)
+					checkInCNAMEOutput = checkInCNAME(node_text, nodes)
 					if checkInCNAMEOutput is not None:
-						print ('Entry:' + str(name) + '.' + settings.DOMAIN + ';' + checkInCNAMEOutput)
-			#if one zone transfer for a nameserver was successful, abort
-			return True
-		except:
-			print(Fore.RED + '[x] Transfer failed for ' + str(ns))
-	print('[x] Probably blocked from ' + settings.DOMAIN + Fore.RESET)
-	return False
+						print((Fore.GREEN + ' |  ' + str(n) + '.' + domain_name).ljust(40) + ' -- ' + checkInCNAMEOutput + Fore.RESET)
+
+
 
 # Check IN A records from zone transfer
 def checkInA(node_text):

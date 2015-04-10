@@ -1,7 +1,7 @@
-DNSBruter
+DNS Bruter
 =========
 
-DNSBruter is an open source multi-threaded penetration testing tool that automates the process of detecting all subdomains of a domain.<br>
+DNS Bruter is an open source multi-threaded penetration testing tool that automates the process of detecting subdomains of a domain.<br>
 
 It is based on the [dnsbruter](https://github.com/marpie/dnsbruter) of [Markus Pieton](https://github.com/marpie).
 
@@ -21,7 +21,7 @@ Preferably, you can download dnsbruter by cloning the [Git](https://github.com/w
 
     git clone https://github.com/whoot/dnsbruter.git
 
-DNSBruter works with [Python](http://www.python.org/download/) version **2.6.x** and **2.7.x** on Debian/Ubuntu, RedHat and Windows platforms.
+DNSBruter works with [Python](http://www.python.org/download/) version **3.x** on Debian/Ubuntu, RedHat and Windows platforms.
 
 On every platform you need following packages:
 
