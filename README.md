@@ -45,20 +45,20 @@ Usage
 
 To get a list of all options use:
 
-    python dnsbruter.py -h
+    python3 dnsbruter.py -h
 
 You can use DNSBruter with domains:
 
-	python dnsbruter.py -d DOMAIN [DOMAIN ...]
+	python3 dnsbruter.py -d DOMAIN [DOMAIN ...]
 
 Or with a file with a list of domains:
 
-	python dnsbruter.py -f FILE
+	python3 dnsbruter.py -f FILE
 
 Example:<br>
 Find all subdomains of example.com (with default subdomainlist):
 
-	python dnsbruter.py -d example.com
+	python3 dnsbruter.py -d example.com
 
 Bug Reporting
 ----
