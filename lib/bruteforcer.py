@@ -40,12 +40,12 @@ class Bruteforcer:
 		if not (is_wildcard):
 			for subdomain in wordlist:
 				thread_pool.add_job((request.head_request, (subdomain, domain_name)))
-			thread_pool.start(100)
+			thread_pool.start(20)
 
 		else:
 			for subdomain in wordlist:
 				thread_pool.add_job((request.get_request, (subdomain + '.' + domain_name)))
-			thread_pool.start(100, is_wildcard)
+			thread_pool.start(20, is_wildcard)
 
 		for subdomain in thread_pool.get_result():
 			print(Fore.GREEN + ' |  ' + str(subdomain[1][0]) + Fore.RESET)
