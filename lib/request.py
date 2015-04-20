@@ -66,6 +66,8 @@ class Request:
 			return subdomain
 		except socket.gaierror:
 			return None
+		except Exception as e:
+			print(subdomain + ' says:', e)
 
 	def get_request(self, domain_name):
 	 	try:
