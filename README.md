@@ -23,11 +23,6 @@ Preferably, you can download dnsbruter by cloning the [Git](https://github.com/w
 
 DNSBruter works with [Python](http://www.python.org/download/) version **3.x** on Debian/Ubuntu and RedHat (and Windows) platforms.
 
-WARNING: 
-----
-I really, really don´t recommend to use it on Windows, because Windows has some fucked up timeout ratings!
-Use it on Linux, comment out the "search xxx" in /etc/resolv.conf and be happy :) 
-
 On every platform you need following packages:
 
 * [dnspython](http://www.dnspython.org/)
@@ -36,6 +31,11 @@ On every platform you need following packages:
 On Redhat you can also need argparse. You can install it with easy_install:
 
 	easy_install argparse
+
+WARNING: 
+----
+I really, really don´t recommend to use it on Windows, because Windows has some fucked up timeout ratings!
+Use it on Linux, comment out the "search xxx" in /etc/resolv.conf and be happy :) 
 
 Usage
 ----
