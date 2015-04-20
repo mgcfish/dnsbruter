@@ -26,11 +26,14 @@ DNSBruter works with [Python](http://www.python.org/download/) version **3.x** o
 On every platform you need following packages:
 
 * [dnspython](http://www.dnspython.org/)
+* [Requests](https://pypi.python.org/pypi/requests/)
 * [Colorama](https://pypi.python.org/pypi/colorama)
 
-On Redhat you can also need argparse. You can install it with easy_install:
+On Redhat you can install all needed packages with easy_install:
 
 	easy_install argparse
+	easy_install requests
+	easy_install colorama
 
 WARNING: 
 ----
