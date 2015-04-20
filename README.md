@@ -21,7 +21,10 @@ Preferably, you can download dnsbruter by cloning the [Git](https://github.com/w
 
     git clone https://github.com/whoot/dnsbruter.git
 
-DNSBruter works with [Python](http://www.python.org/download/) version **3.x** on Debian/Ubuntu, RedHat and Windows platforms.
+DNSBruter works with [Python](http://www.python.org/download/) version **3.x** on Debian/Ubuntu and RedHat (and Windows) platforms.
+
+WARNING: I really, really don´t recommend to use it Windows, because Windows has some fucked up timeout ratings!
+	 Use it on Linux, comment out the "search xxx" in /etc/resolv.conf and be happy :) 
 
 On every platform you need following packages:
 
