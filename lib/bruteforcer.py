@@ -50,4 +50,4 @@ class Bruteforcer:
 			thread_pool.start(20, is_wildcard)
 
 		for subdomain in thread_pool.get_result():
-			print(Fore.GREEN + ' |  ' + str(subdomain[1][0]) + Fore.RESET)
+			print(Fore.GREEN + ' |  ' + subdomain + Fore.RESET)

@@ -38,7 +38,7 @@ class Wildcard:
 		randomSubdomain = hashlib.sha224(str(time.time()).encode('utf-8')).hexdigest()[:12]
 		response = request.get_request(randomSubdomain + '.' + domain_name)
 		if response:
-			domain.set_is_wildcard(response[1])
+			domain.set_is_wildcard(response[0])
 			print(Fore.RED + ' | ' + domain_name + ' is a wildcard domain' + Fore.RESET)
 		else:
 			print(Fore.GREEN + ' | ' + domain_name + ' is no wildcard domain' + Fore.RESET)

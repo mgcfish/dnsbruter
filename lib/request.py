@@ -61,25 +61,29 @@ class Request:
 		return False
 
 	def head_request(self, subdomain, domain_name):
+		combined = subdomain + '.' + domain_name
 		try:
-			socket.gethostbyname(subdomain + '.' + domain_name)
-			return subdomain
+			ip = socket.gethostbyname(combined)
+			return (combined.center(18) + ' (' + str(ip) + ')')
 		except socket.gaierror:
 			return None
 		except Exception as e:
-			print(subdomain + ' says:', e)
+			print(combined + ' says:', e)
+			return None
 
 	def get_request(self, domain_name):
 	 	try:
-	 		r = requests.get('http://' + domain_name, timeout=1, headers={'User-Agent' : "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)"}, allow_redirects=False, verify=False)
-	 		status_code = str(r.status_code)
-	 		if status_code == '405':
-	 			print("WARNING, (HEAD) method not allowed!!")
-	 			exit(-1)
-	 		return [status_code, r.text]
+	 		r = requests.get('http://' + domain_name, timeout=2, headers={'User-Agent' : "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)"}, allow_redirects=True)
+	 		try:
+	 			ip = socket.gethostbyname(domain_name)
+	 		except Exception as e:
+	 			print('Could not determine ip address:', e)
+	 			ip = 'error'
+	 		return [r.text, (domain_name.center(18) + ' (' + str(ip) + ')')]
 	 	except requests.exceptions.Timeout:
 	 		print(Fore.RED + '[x] Connection timed out' + Fore.RESET)
 	 	except requests.exceptions.ConnectionError:
-	 		return False
+	 		pass
 	 	except requests.exceptions.RequestException as e:
-	 		print(Fore.RED + str(e) + Fore.RESET)
+	 		print(domain_name + ' says:', e)
+	 	return None

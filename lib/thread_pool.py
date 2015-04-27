@@ -103,9 +103,9 @@ def _work_function(job_q, result_q):
 		try:
 			result = function(*args)
 			if not(result == None):
-				result_q.put((job))
+				result_q.put(result)
 		except Exception as e:
-			print(e)
+			print('_work_function says:\n', e)
 		finally:
 			job_q.task_done()
 
@@ -123,9 +123,9 @@ def _wildcard_work_function(job_q, result_q, init_request):
 		args = str(job[1])
 		try:
 			result = function(args)
-			if not(result[1] == init_request) and not result == False:
-				result_q.put((job))
+			if not(result == None) and not(result[0] == init_request):
+				result_q.put(result[1])
 		except Exception as e:
-			print(e)
+			print('_wildcard_work_function says:\n', e)
 		finally:
 			job_q.task_done()

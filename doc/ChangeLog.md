@@ -1,3 +1,10 @@
+## Version 0.4.1
+
+* Output is now: <subdomain>.<domain>.<root> (<IP>)
+* deleted some invalid subdomains
+* sorted wordlists alphabetically
+* added default wordlist
+
 ## Version 0.4
 
 * Using Python 3.x now!

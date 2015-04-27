@@ -18,7 +18,7 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)
 #-------------------------------------------------------------------------------
 
-__version__ = "0.4"
+__version__ = "0.4.1"
 __program__ = "DNS Bruter"
 __description__ = 'Automatic Subdomain Bruteforcer'
 __author__ = "https://github.com/whoot"
@@ -46,7 +46,7 @@ class DNSBruter:
 		#anonGroup = parser.add_mutually_exclusive_group()
 		group.add_argument('-f', '--file', dest='file')
 		group.add_argument('-d', '--domain', dest='domain', type=str, nargs='+')
-		parser.add_argument( "-w", "--wordlist", required=True)
+		parser.add_argument( "-w", "--wordlist", default='wordlists/subdomains.txt')
 		#anonGroup.add_argument('--tor', help='using only TOR for connections', action='store_true')
 		#anonGroup.add_argument('--privoxy', help='using only Privoxy for connections', action='store_true')
 		#anonGroup.add_argument('--tp', help='using TOR and Privoxy for connections', action='store_true')
@@ -84,8 +84,8 @@ class DNSBruter:
 
 
 		except KeyboardInterrupt:
-			print("\nReceived keyboard interrupt.\nQuitting...")
-			exit(-1)
+			print("\nReceived keyboard interrupt.\nPress ctrl+c again to quit...")
+			sys.exit(-1)
 		finally:
 			deinit()
 			now = datetime.datetime.now()
