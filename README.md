@@ -3,8 +3,6 @@ DNS Bruter
 
 DNS Bruter is an open source multi-threaded penetration testing tool that automates the process of detecting subdomains of a domain.<br>
 
-It is based on the [dnsbruter](https://github.com/marpie/dnsbruter) of [Markus Pieton](https://github.com/marpie).
-
 Features
 ----
 
@@ -28,12 +26,6 @@ On every platform you need following packages:
 * [dnspython](http://www.dnspython.org/)
 * [Requests](https://pypi.python.org/pypi/requests/)
 * [Colorama](https://pypi.python.org/pypi/colorama)
-
-On Redhat you can install all needed packages with easy_install:
-
-	easy_install argparse
-	easy_install requests
-	easy_install colorama
 
 WARNING: 
 ----
@@ -67,7 +59,7 @@ Bug reports are welcome! Please report all bugs on the [issue tracker](https://g
 Links
 ----
 
-* Download: [.tar.gz](https://github.com/whoot/dnsbruter/tarball/master) or [.zip](https://github.com/whoot/dnsbruter/archive/master)
+* Download: [.tar.gz](https://github.com/whoot/dnsbruter/tarball/master) or [.zip](https://github.com/whoot/dnsbruter/archive/master.zip)
 * Changelog: [Here](https://github.com/whoot/dnsbruter/blob/master/doc/ChangeLog.md)
 * TODO: [Here](https://github.com/whoot/dnsbruter/blob/master/doc/TODO.md)
-* Issue tracker: https://github.com/whoot/dnsbruter/issues
+* Issue tracker: [Here](https://github.com/whoot/dnsbruter/issues)
