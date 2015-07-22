@@ -66,7 +66,7 @@ Links
 
 # License
 
-Typo3 Enumerator - Automatic Typo3 Enumeration Tool
+DNSBruter - Automatic Subdomain Enumeration Tool
 
 Copyright (c) 2015 Jan Rude
 
