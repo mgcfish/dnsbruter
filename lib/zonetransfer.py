@@ -47,7 +47,7 @@ class Zonetransfer:
 		spf_record = request.check_SPFRecord(domain.get_nameserver())
 		if spf_record:
 			print(Fore.GREEN + ' |  SPF Record: ' + Fore.RESET)
-			for data in transfer:
+			for data in spf_record:
 				print(' | ' + data)
 
 		nodes = request.try_zonetransfer(domain.get_nameserver(), domain_name)
