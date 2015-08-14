@@ -24,7 +24,8 @@ DNSBruter works with [Python](http://www.python.org/download/) version **3.x** o
 On every platform you need following packages:
 
 * [dnspython](http://www.dnspython.org/)
-* [Requests](https://pypi.python.org/pypi/requests/)
+* [Requests](https://pypi.python.org/pypi/requests/) 
+    ---> Please use version 2.6.0 as there is an issue with SSL_v3 Certificates (see https://github.com/kennethreitz/requests/issues/2573)
 * [Colorama](https://pypi.python.org/pypi/colorama)
 
 WARNING: 
