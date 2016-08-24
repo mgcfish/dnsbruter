@@ -1,3 +1,8 @@
+## Version 0.4.1.1
+
+* New wordlists of subdomains created at 2016/02/27 by [bitquark](https://github.com/bitquark/dnspop/tree/master/results).
+  Default is popular 10000 subdomains.
+
 ## Version 0.4.1
 
 * Output is now: <subdomain>.<domain>.<root> (<IP>)

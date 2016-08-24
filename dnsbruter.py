@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #-------------------------------------------------------------------------------
 # DNS Bruter - Automatic Subdomain Bruteforcer
-# Copyright (c) 2015 Jan Rude
+# Copyright (c) 2016 Jan Rude
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # along with this program.  If not, see [http://www.gnu.org/licenses/](http://www.gnu.org/licenses/)
 #-------------------------------------------------------------------------------
 
-__version__ = "0.4.1"
+__version__ = "0.4.1.1"
 __program__ = "DNS Bruter"
 __description__ = 'Automatic Subdomain Bruteforcer'
 __author__ = "https://github.com/whoot"
@@ -43,13 +43,9 @@ class DNSBruter:
 	def run(self):
 		parser = argparse.ArgumentParser(usage='dnsbruter.py [options]', add_help=False)
 		group = parser.add_mutually_exclusive_group()
-		#anonGroup = parser.add_mutually_exclusive_group()
 		group.add_argument('-f', '--file', dest='file')
 		group.add_argument('-d', '--domain', dest='domain', type=str, nargs='+')
-		parser.add_argument( "-w", "--wordlist", default='wordlists/subdomains.txt')
-		#anonGroup.add_argument('--tor', help='using only TOR for connections', action='store_true')
-		#anonGroup.add_argument('--privoxy', help='using only Privoxy for connections', action='store_true')
-		#anonGroup.add_argument('--tp', help='using TOR and Privoxy for connections', action='store_true')
+		parser.add_argument( "-w", "--wordlist", default='wordlists/popular_10000.txt')
 		parser.add_argument( "-h", "--help", action="help")
 		args = parser.parse_args()
 
